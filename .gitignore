@@ -1,0 +1,11 @@
+# ide-generated
+*.iml
+.idea/*
+
+# gradle-generated
+.gradle
+local.properties
+.DS_Store
+build
+captures
+.externalNativeBuild
