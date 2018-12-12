@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 
-public class WSActivity extends CameraActivity implements OnImageAvailableListener, SensorEventListener {  //, SensorEventListener
+public class WSActivity extends CameraActivity implements OnImageAvailableListener, SensorEventListener {
 
     private static final Logger LOGGER = new Logger();
 
