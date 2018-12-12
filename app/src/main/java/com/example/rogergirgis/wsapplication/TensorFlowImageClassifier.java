@@ -34,7 +34,7 @@ import java.util.Vector;
 
 /** A classifier specialized to label images using TensorFlow. */
 public class TensorFlowImageClassifier implements Classifier {
-  private static final String TAG = "TensorFlowImageClassifier";
+  private static final String TAG = "TF_ImageClassifier";
 
   // Only return this many results with at least this confidence.
   private static final int MAX_RESULTS = 3;
@@ -87,7 +87,7 @@ public class TensorFlowImageClassifier implements Classifier {
     c.outputName = outputName;
 
     // Read the label names into memory.
-    // TODO(andrewharp): make this handle non-assets.
+    // (andrewharp): make this handle non-assets.
     String actualFilename = labelFilename.split("file:///android_asset/")[1];
     Log.i(TAG, "Reading labels from: " + actualFilename);
     BufferedReader br = null;

@@ -16,6 +16,7 @@ package com.example.rogergirgis.wsapplication;
  * limitations under the License.
  */
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
@@ -37,6 +38,7 @@ import com.example.rogergirgis.wsapplication.env.Logger;
 import java.io.IOException;
 import java.util.List;
 
+@SuppressLint("ValidFragment")
 public class LegacyCameraConnectionFragment extends Fragment {
   private Camera camera;
   private static final Logger LOGGER = new Logger();

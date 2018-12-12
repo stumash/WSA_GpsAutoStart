@@ -16,6 +16,7 @@
 
 package com.example.rogergirgis.wsapplication;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -63,6 +64,7 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
+@SuppressLint("ValidFragment")
 public class CameraConnectionFragment extends Fragment {
   private static final Logger LOGGER = new Logger();
 
@@ -229,6 +231,7 @@ public class CameraConnectionFragment extends Fragment {
 
   private final ConnectionCallback cameraConnectionCallback;
 
+  @SuppressLint("ValidFragment")
   private CameraConnectionFragment(
       final ConnectionCallback connectionCallback,
       final OnImageAvailableListener imageListener,
@@ -409,7 +412,7 @@ public class CameraConnectionFragment extends Fragment {
     } catch (final NullPointerException e) {
       // Currently an NPE is thrown when the Camera2API is used but not supported on the
       // device this code runs.
-      // TODO(andrewharp): abstract ErrorDialog/RuntimeException handling out into new method and
+      // (andrewharp): abstract ErrorDialog/RuntimeException handling out into new method and
       // reuse throughout app.
       ErrorDialog.newInstance(getString(R.string.camera_error))
           .show(getChildFragmentManager(), FRAGMENT_DIALOG);
@@ -422,6 +425,7 @@ public class CameraConnectionFragment extends Fragment {
   /**
    * Opens the camera specified by {@link CameraConnectionFragment#cameraId}.
    */
+  @SuppressLint("MissingPermission")
   private void openCamera(final int width, final int height) {
     setUpCameraOutputs();
     configureTransform(width, height);

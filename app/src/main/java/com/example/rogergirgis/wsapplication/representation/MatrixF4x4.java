@@ -13,7 +13,7 @@ import android.util.Log;
  * it is recommend that when setting the matrix values individually that you use the set{x,#} methods, where 'x' is
  * either x, y, z or w and # is either 0, 1, 2 or 3, setY1 for example. The reason you should use these functions is
  * because it will map directly to that part of the matrix regardless of whether or not the internal matrix is column
- * major or not. If the matrix is either or length 9 or 16 it will be able to determine if it can set the value or not.
+ * major or not. If the matrix is either length 9 or 16 it will be able to determine if it can set the value or not.
  * If the matrix is of size 9 but you set say w2, the value will not be set and the set method will return without any
  * error.
  *
@@ -185,7 +185,7 @@ public class MatrixF4x4 {
      */
     public void multiplyMatrix4x4ByMatrix(MatrixF4x4 matrixf) {
 
-        // TODO implement Strassen Algorithm in place of this slower naive one.
+        // (andrewharp) implement Strassen Algorithm in place of this slower naive one.
         float[] bufferMatrix = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         float[] matrix = matrixf.getMatrix();
 
