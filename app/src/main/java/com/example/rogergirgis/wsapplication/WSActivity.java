@@ -1,5 +1,7 @@
 package com.example.rogergirgis.wsapplication;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
@@ -25,6 +27,8 @@ import com.example.rogergirgis.wsapplication.OverlayView.DrawCallback;
 import com.example.rogergirgis.wsapplication.env.BorderedText;
 import com.example.rogergirgis.wsapplication.env.ImageUtils;
 import com.example.rogergirgis.wsapplication.env.Logger;
+import com.example.rogergirgis.wsapplication.gpsautostart.Constants;
+import com.example.rogergirgis.wsapplication.gpsautostart.GPSService;
 
 import org.pielot.openal.SoundEnv;
 import org.pielot.openal.Source;
@@ -120,7 +124,7 @@ public class WSActivity extends CameraActivity implements OnImageAvailableListen
     };
     private TextToSpeech mTTS;
     private int mSpeaking;
-    private int mSpeakIntro = 0;
+    private boolean mSpeakIntro = true;
     long startTimeGyro;
 
     // Prediction Combination/Averaging/KalmanFilter
@@ -148,6 +152,8 @@ public class WSActivity extends CameraActivity implements OnImageAvailableListen
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         loadConfiguration();
+
+        startService(new Intent(getApplicationContext(), GPSService.class));
 
         this.soundEnv = SoundEnv.getInstance(this);
         try {
@@ -198,7 +204,6 @@ public class WSActivity extends CameraActivity implements OnImageAvailableListen
         if (!myDir.mkdirs()) {
             LOGGER.i("Make dir failed");
         }
-
     }
 
     private void loadConfiguration() {
@@ -241,6 +246,16 @@ public class WSActivity extends CameraActivity implements OnImageAvailableListen
         }
 
         super.onResume();
+
+        SharedPreferences sharedPreferences = getApplicationContext()
+                .getSharedPreferences(Constants.PREFERENCES_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(Constants.ACTIVE_ACTIVITY, Constants.WS_ACTIVITY);
+        editor.commit();
+
+        // disable 'tutorial' if WSActivity is activated by intent with extra boolean DO_TUTORIAL=false
+        Intent intent = getIntent();
+        mSpeakIntro = intent.getBooleanExtra(Constants.DO_TUTORIAL, true);
     }
 
     @Override
@@ -251,6 +266,12 @@ public class WSActivity extends CameraActivity implements OnImageAvailableListen
         save_csv();
 
         mSensorManager.unregisterListener(this);
+
+        SharedPreferences sharedPreferences = getApplicationContext()
+                .getSharedPreferences(Constants.PREFERENCES_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(Constants.ACTIVE_ACTIVITY, Constants.ACTIVITY_PAUSED);
+        editor.commit();
     }
 
     @Override
@@ -267,7 +288,7 @@ public class WSActivity extends CameraActivity implements OnImageAvailableListen
         Runnable r = new Runnable() {
             @Override
             public void run() {
-                if (mSpeakIntro == 0){
+                if (mSpeakIntro){
                     if (Integer.parseInt(folderNumber) == 0) {
                         speak("Rotate away from the auditory cues as slowly as possible, " +
                                 "If no sound is produced, it means you are correctly oriented. ");
@@ -285,7 +306,7 @@ public class WSActivity extends CameraActivity implements OnImageAvailableListen
                     try { Thread.sleep(200); }
                     catch (InterruptedException ex) { android.util.Log.d("WSApplication",
                             ex.toString());}
-                    mSpeakIntro++;
+                    mSpeakIntro = false;
                     lastPlayed = 0;
                 }
 
